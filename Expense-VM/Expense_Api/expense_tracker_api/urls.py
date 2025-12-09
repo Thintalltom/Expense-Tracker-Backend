@@ -16,5 +16,16 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('categories/', views.get_Categorys, name='get_categories'),
+    path('categories/create/', views.create_Category, name='create_category'),
+    path('categories/<int:pk>/', views.category_detail, name='category_detail'),
+    path('expenses/', views.get_Expenses, name='get_expenses'),
+    path('expenses/create/', views.create_Expense, name='create_expense'),
+    path('expenses/<int:pk>/', views.expense_detail, name='expense_detail'),
+    path('budgets/', views.get_Budgets, name='get_budgets'),
+    path('budgets/create/', views.create_Budget, name='create_budget'),
+    # path('analysis/', views.get_Analysis, name='get_analysis'),
+    # path('analysis/create/', views.create_Analysis, name='create_analysis'),
+    # path('analysis/<int:pk>/', views.analysis_detail, name='analysis_detail'),
 ]
