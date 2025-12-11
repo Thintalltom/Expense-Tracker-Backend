@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 # Create your views here.
-from .serializers import CategorySerializer, ExpenseSerializer, BudgetSerializer
-from .models import Category, Expense, Budget
+from .serializers import CategorySerializer, ExpenseSerializer, BudgetSerializer, IncomeSerializer
+from .models import Category, Expense, Budget, Income
 
 @api_view(['GET'])
 def get_Categorys(request):
@@ -145,3 +145,16 @@ def create_Budget(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@swagger_auto_schema(method='post', request_body=IncomeSerializer)
+@api_view(['POST'])
+def create_Income(request):
+    serializer = IncomeSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def get_Incomes(request):
+    incomes = Income.objects.all()
+    serializer = IncomeSerializer(incomes, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
