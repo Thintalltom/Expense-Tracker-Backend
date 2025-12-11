@@ -3,7 +3,7 @@ from . import views
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
+from rest_framework_simplejwt.views import TokenRefreshView
 schema_view = get_schema_view(
    openapi.Info(
       title="Expense Tracker API",
@@ -17,6 +17,11 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+     path('sign-up/', views.create_user, name='signup'),
+    path('login/', views.login_user, name='login'),
+    path('refresh/', TokenRefreshView.as_view()),
+    path('logout/', views.logout_user, name='logout'),
+    path('members/', views.members, name='members'),
     path('categories/', views.get_Categorys, name='get_categories'),
     path('categories/create/', views.create_Category, name='create_category'),
     path('categories/<int:pk>/', views.category_detail, name='category_detail'),
