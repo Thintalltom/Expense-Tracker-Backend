@@ -4,6 +4,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework_simplejwt.views import TokenRefreshView
+
 schema_view = get_schema_view(
    openapi.Info(
       title="Expense Tracker API",
@@ -12,6 +13,7 @@ schema_view = get_schema_view(
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
+   authentication_classes=[],
 )
 
 
@@ -30,6 +32,8 @@ urlpatterns = [
     path('expenses/<int:pk>/', views.expense_detail, name='expense_detail'),
     path('budgets/', views.get_Budgets, name='get_budgets'),
     path('budgets/create/', views.create_Budget, name='create_budget'),
+    path('incomes/', views.get_Incomes, name='get_incomes'),
+    path('incomes/create/', views.create_Income, name='create_income'),
     # path('analysis/', views.get_Analysis, name='get_analysis'),
     # path('analysis/create/', views.create_Analysis, name='create_analysis'),
     # path('analysis/<int:pk>/', views.analysis_detail, name='analysis_detail'),

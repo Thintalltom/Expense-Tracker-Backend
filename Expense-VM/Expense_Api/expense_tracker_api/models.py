@@ -4,19 +4,22 @@ from django.contrib.auth.models import User
 
 #model for User login
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
     # Add other fields as needed
 
     def __str__(self):
         return self.user.username
     
 class Category(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='categories', default=1)
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 class Expense(models.Model):
+    #add this line to aknowledge user
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expenses', default=1)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
     date = models.DateField()
@@ -26,6 +29,7 @@ class Expense(models.Model):
         return f"{self.description} - {self.amount}"
     
 class Income(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='incomes', default=1)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     source = models.CharField(max_length=100)
     date = models.DateField()
@@ -34,7 +38,9 @@ class Income(models.Model):
         return f"{self.source} - {self.amount}"
 
 class Budget(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='budgets', default=1)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     start_date = models.DateField()
     end_date = models.DateField()
 
@@ -43,6 +49,7 @@ class Budget(models.Model):
     
 
 class Analysis(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='analyses', default=1)
     month = models.CharField(max_length=20)
     total_expenses = models.DecimalField(max_digits=10, decimal_places=2)
     total_income = models.DecimalField(max_digits=10, decimal_places=2)
