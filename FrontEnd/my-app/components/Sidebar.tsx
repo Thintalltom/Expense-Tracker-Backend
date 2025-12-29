@@ -2,8 +2,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { LuLogOut } from "react-icons/lu";
 interface SidebarItem {
   label: string
   href: string
@@ -16,11 +15,11 @@ interface SidebarProps {
 
 const Sidebar = ({ items }: SidebarProps) => {
   const pathname = usePathname()
-      const dispatch = useDispatch();
-    const username = useSelector((state:RootState) => state.user.username)
-    const password = useSelector((state:RootState) => state.user.password)
+
   return (
-    <div className="w-64 bg-white border-[0.1px] border-gray-300 shadow-sm text-black h-screen ">
+    <>
+   
+    <div className="w-64 bg-white border-[0.1px] border-gray-300 shadow-sm text-black h-screen hidden lg:block">
       <div className="mb-8 border-b-[0.1px] border-gray-300 pb-4 p-4">
         <h2 className="text-xl font-bold">FinanceFlow</h2>
       </div>
@@ -45,11 +44,13 @@ const Sidebar = ({ items }: SidebarProps) => {
         <div className='flex gap-1'>
         <p>icon</p>
         <p>username</p>
-        <p>logoutIcon</p>
+        <button><LuLogOut /></button>
         </div>
         <button></button>
       </div>
     </div>
+ 
+     </>
   )
 }
 
