@@ -20,7 +20,7 @@ const Page = () => {
       if(username === defaultUsername && password === defaultPassword) {
         router.push('/dashboard')
       }
-    }, [username, password])
+    }, [username, password, router])
     
       const inputFields = [
    
