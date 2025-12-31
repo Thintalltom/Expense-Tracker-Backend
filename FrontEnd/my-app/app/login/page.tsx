@@ -7,20 +7,35 @@ import { RootState } from "@/store/store";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { setUsername, setPassword } from "@/store/slices/userSlice";
+import { setUsername, setPassword, setAccessToken, setRefreshToken } from "@/store/slices/userSlice";
+import { useLoginUserMutation } from "@/store/query/Auth-query";
+import { toast } from "sonner";
 const Page = () => {
     const dispatch = useDispatch();
-    const username = useSelector((state:RootState) => state.user.username)
-    const password = useSelector((state:RootState) => state.user.password)
+    const [loginUser, {data: LoginData, isLoading, error}] = useLoginUserMutation();
+    const {username, password} = useSelector((state:RootState) => state.user);
+    const router = useRouter();
+    const handleSubmit = async () => {
+      try {
+        const response = await loginUser({
+          username: username || '',
+          password: password || ''
+        }).unwrap();
 
-        const defaultUsername = 'adeyanju';
-        const defaultPassword = 'adeyanju';
-        const router = useRouter();
-    useEffect(() => {
-      if(username === defaultUsername && password === defaultPassword) {
-        router.push('/dashboard')
+        dispatch(setAccessToken(response.access || ''));
+        dispatch(setRefreshToken(response.refresh || ''));
+        toast.success(response.message || 'Login successful!');
+        router.push('/dashboard');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        if (err.status === 401) {
+          toast.error(err.data?.error || 'Invalid credentials');
+        } else {
+          toast.error('Login failed');
+        }
       }
-    }, [username, password, router])
+    };
+ 
     
       const inputFields = [
    
@@ -67,7 +82,9 @@ const Page = () => {
                                 onChange={field.onChange}
                             />
                         ))}
-                        <button className="w-full bg-blue-800 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                        <button
+                            onClick={handleSubmit}
+                            className="w-full bg-blue-800 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors">
                             Login
                         </button>
                     </div>          

@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'
 import { LuLogOut } from "react-icons/lu";
+import { setAddTransactionPopup } from '@/store/slices/userSlice';
+import { useDispatch } from 'react-redux';
+import { FiUser } from "react-icons/fi";
 interface SidebarItem {
   label: string
   href: string
@@ -14,6 +17,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ items }: SidebarProps) => {
+  const dispatch = useDispatch()
   const pathname = usePathname()
 
   return (
@@ -40,11 +44,15 @@ const Sidebar = ({ items }: SidebarProps) => {
         ))}
       </nav>
       <div className='flex flex-col absolute bottom-0 p-4 min-w-64 border-t-[0.1px] border-gray-300'>
-        <button className='bg-blue-600 text-white font-semibold mx-auto px-7.5 py-2.5 shadow-sm rounded'> + Add Transaction</button>
-        <div className='flex gap-1'>
-        <p>icon</p>
+        <button className='bg-blue-600 text-white font-semibold mx-auto px-7.5 py-2.5 shadow-sm rounded' onClick={() => dispatch(setAddTransactionPopup(true))}> + Add Transaction</button>
+        <div className='flex mt-2 justify-center items-center gap-4'>
+          <div className='w-10 h-10 rounded-full bg-blue-100 p-2 flex justify-center items-center'>
+
+       <FiUser className='text-blue-500' />
+          </div>
+
         <p>username</p>
-        <button><LuLogOut /></button>
+        <button><LuLogOut className='text-slate-400' /></button>
         </div>
         <button></button>
       </div>

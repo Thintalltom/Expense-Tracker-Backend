@@ -2,9 +2,9 @@ import React from 'react';
 
 interface InputFieldProps {
   label: string;
-  type: string;
-  placeholder: string;
-  icon: React.ReactNode;
+  type?: string;
+  placeholder?: string;
+  icon?: React.ReactNode;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

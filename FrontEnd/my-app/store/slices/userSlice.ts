@@ -4,6 +4,9 @@ interface AuthState {
     password: string | null;
     confirmpassword: string | null;
     username: string | null;
+    addTransactionPopup: boolean;
+    accessToken: string | null;
+    refreshToken: string | null;
 }
 
 const initialState: AuthState = {
@@ -11,6 +14,9 @@ const initialState: AuthState = {
     password: null,
     confirmpassword: null,
     username: null,
+    addTransactionPopup: false,
+    accessToken: null,
+    refreshToken: null
 };
 
 
@@ -30,8 +36,17 @@ const userSlice = createSlice({
         setUsername: (state, action: PayloadAction<string>) => {
             state.username = action.payload;
         },
+        setAddTransactionPopup: (state, action: PayloadAction<boolean>) => {
+            state.addTransactionPopup = action.payload;
+        },
+        setAccessToken: (state, action: PayloadAction<string>) => {
+            state.accessToken = action.payload;
+        },
+        setRefreshToken: (state, action: PayloadAction<string>) => {
+            state.refreshToken = action.payload;
+        },
     },
 });
 
-export const { setEmail, setPassword, setConfirmPassword, setUsername } = userSlice.actions;
+export const { setEmail, setPassword, setConfirmPassword, setUsername, setAddTransactionPopup, setAccessToken, setRefreshToken } = userSlice.actions;
 export default userSlice.reducer;

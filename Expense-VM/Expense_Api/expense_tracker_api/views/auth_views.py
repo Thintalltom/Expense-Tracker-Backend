@@ -30,9 +30,30 @@ def create_user(request):
     email = request.data.get("email")
     password = request.data.get("password")
 
+    if not username:
+        return Response(
+            {"error": "Username is required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    if not email:
+        return Response(
+            {"error": "Email is required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    if not password:
+        return Response(
+            {"error": "Password is required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
     if User.objects.filter(username=username).exists():
         return Response(
             {"error": "Username already exists"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    elif User.objects.filter(email=email).exists():
+        return Response(
+            {"error": "Email already exists"},
             status=status.HTTP_400_BAD_REQUEST
         )
 
