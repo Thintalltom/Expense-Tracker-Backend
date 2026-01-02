@@ -11,6 +11,8 @@ import { useState } from "react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner"
+import { TbLockPassword } from "react-icons/tb";
+import { Icon } from "lucide-react";
 const Page = () => {
 
   const [createUser, {data: SignupData, isLoading, error}] = useCreateUserMutation();
@@ -60,7 +62,8 @@ const Page = () => {
       label: "Password",
       type: showPassword ? "text" : "password",
       placeholder: "Enter your password",
-      icon: (
+      icon: <TbLockPassword className="w-5 h-5" />,
+      sideIcon: (
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
@@ -94,6 +97,7 @@ const Page = () => {
                   type={field.type}
                   placeholder={field.placeholder}
                   icon={field.icon}
+                  sideIcon={field.sideIcon}
                   value={field.value || ''}
                   onChange={(e) => dispatch(field.onchange(e.target.value))}
                 />

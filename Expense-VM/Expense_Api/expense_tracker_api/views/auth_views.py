@@ -115,13 +115,24 @@ def logout_user(request):
         refresh_token = request.data["refresh"]
         token = RefreshToken(refresh_token)
         token.blacklist()
-        return Response({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
+        return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
     except KeyError:
         return Response({"error": "Refresh token not provided"}, status=status.HTTP_400_BAD_REQUEST)
     except TokenError as e:
         return Response({"error": "Token error"}, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+    method='get',
+    security=[{'Bearer': []}],
+    responses={200: 'Current user data'}
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def me(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(
     method='get',

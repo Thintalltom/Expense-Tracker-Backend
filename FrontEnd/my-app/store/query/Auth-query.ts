@@ -5,6 +5,7 @@ interface CreateUserBody {
     username?: string;
     email?: string;
     password?: string;
+    refresh?: string;
 
 }
 interface responseDetails {
@@ -35,14 +36,22 @@ export const AuthApi = createApi({
                 body
             })
         }),
-        logoutUser: builder.mutation<responseDetails, void>({
-            query: () => ({
+        logoutUser: builder.mutation<responseDetails, CreateUserBody>({
+            query: (body) => ({
                 url: 'logout/',
                 method: 'POST',
-                body: {}
+                body
+            })
+        }),
+        getUserDetails: builder.query<responseDetails, void>({
+            query: () => ({
+                url: 'me/',
+                method: 'GET',
             })
         })
     })
 });
 
-export const { useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation } = AuthApi
+export const { useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation,
+    useGetUserDetailsQuery
+} = AuthApi

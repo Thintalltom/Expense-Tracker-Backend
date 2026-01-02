@@ -5,7 +5,6 @@ import { FaGoogleWallet } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Link from "next/link";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { setUsername, setPassword, setAccessToken, setRefreshToken } from "@/store/slices/userSlice";
 import { useLoginUserMutation } from "@/store/query/Auth-query";

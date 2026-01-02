@@ -17,7 +17,7 @@ def get_Expenses(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_Expense(request):
-    serializer = ExpenseSerializer(data=request.data)
+    serializer = ExpenseSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

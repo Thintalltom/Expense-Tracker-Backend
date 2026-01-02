@@ -13,15 +13,25 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+const loginPersistConfig = {
+  key: 'login',
+  storage,
+}
+
 const rootReducer = combineReducers({
-     user: userReducer,
+     user: persistReducer(loginPersistConfig, userReducer),
         [AuthApi.reducerPath]: AuthApi.reducer,
 })
 export const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(AuthApi.middleware),
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }).concat(AuthApi.middleware),
 });
 
+export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

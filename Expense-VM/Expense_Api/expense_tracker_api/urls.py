@@ -23,6 +23,7 @@ urlpatterns = [
     path('login/', views.login_user, name='login'),
     path('refresh/', TokenRefreshView.as_view()),
     path('logout/', views.logout_user, name='logout'),
+    path('me/', views.me, name='me'),
     path('members/', views.members, name='members'),
     path('categories/', views.get_Categorys, name='get_categories'),
     path('categories/create/', views.create_Category, name='create_category'),
