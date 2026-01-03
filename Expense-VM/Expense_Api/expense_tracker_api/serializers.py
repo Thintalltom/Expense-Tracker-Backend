@@ -13,14 +13,21 @@ class CategorySerializer(serializers.ModelSerializer):
         read_only_fields = ['user']
 
 class ExpenseSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(write_only=True, required=False)
+    category_name = serializers.CharField(write_only=True, required=True)
     category = CategorySerializer(read_only=True)
     
     class Meta:
         model = Expense
         fields = ['id', 'amount', 'description', 'date', 'category', 'category_name']
-        read_only_fields = ['user', ]
+        read_only_fields = ['user' ]
+        # this allows to add required fields
+        extra_kwargs = {
+        'amount': {'required': True},
+        'description': {'required': True},
+        'date': {'required': True},
+        'category_name': {'required': True}}
     
+
     def create(self, validated_data):
         category_name = validated_data.pop('category_name', None)
         user = self.context['request'].user
@@ -53,10 +60,37 @@ class IncomeSerializer(serializers.ModelSerializer):
 
 
 class BudgetSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(write_only=True, required=True)
+    category = CategorySerializer(read_only=True)
     class Meta:
         model = Budget
-        fields = ['id', 'total_amount', 'start_date', 'end_date', 'category']
+        category_name = serializers.CharField(write_only=True, required=True)
+        fields = ['id', 'total_amount', 'start_date', 'end_date', 'category_name', 'category']
         read_only_fields = ['user']
+
+    def create(self, validated_data):
+        category_name = validated_data.pop('category_name', None)
+        user = self.context['request'].user
+        if category_name:
+            category, created = Category.objects.get_or_create(
+                name=category_name,
+                user=user,
+                defaults={'user': user}
+            )
+            validated_data['category'] = category
+        return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        category_name = validated_data.pop('category_name', None)
+        user = self.context['request'].user
+        if category_name:
+            category, created = Category.objects.get_or_create(
+                name=category_name,
+                user=user,
+                defaults={'user': user}
+            )
+            validated_data['category'] = category
+        return super().update(instance, validated_data)
 
 class AnalysisSerializer(serializers.ModelSerializer):
     class Meta:

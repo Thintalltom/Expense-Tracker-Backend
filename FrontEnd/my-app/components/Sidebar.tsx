@@ -3,13 +3,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'
 import { LuLogOut } from "react-icons/lu";
-import { setAddTransactionPopup } from '@/store/slices/userSlice';
+import { setAddTransactionPopup, clearUserData } from '@/store/slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLogoutUserMutation,  useGetUserDetailsQuery } from '@/store/query/Auth-query';
+import { useLogoutUserMutation,  useGetUserDetailsQuery, AuthApi } from '@/store/query/Auth-query';
 import { FiUser } from 'react-icons/fi';
 import { RootState } from "@/store/store";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { persistor } from '@/store/store';
 interface SidebarItem {
   label: string
   href: string
@@ -32,16 +33,27 @@ const Sidebar = ({ items }: SidebarProps) => {
       const response = await logoutUser({
         refresh: refreshToken || ''
       }).unwrap();
-      toast.success(response.message || 'Logged out successfully!');
+      
+      // Clear Redux persist storage
+      dispatch(clearUserData());
+      await persistor.purge();
+      //always add this to reset api state
+      dispatch(AuthApi.util.resetApiState());
+      toast.success(response.message);
       router.push('/login');
-      console.log('the response', response)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: string | any) {
+      // Clear storage even if logout API fails
+      dispatch(clearUserData());
+      await persistor.purge();
+      dispatch(AuthApi.util.resetApiState());
+      
       if (error.status === 401) {
         toast.error(error.data?.error || 'Invalid credentials');
       } else {
         toast.error('Logout failed');
       }
+      router.push('/login');
     }
   }
   return (

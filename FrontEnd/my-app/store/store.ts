@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/userSlice";
+import expenseReducer from "./slices/expenseSlice";
 import { AuthApi } from "./query/Auth-query";
 import {
   persistStore,
@@ -20,6 +21,7 @@ const loginPersistConfig = {
 
 const rootReducer = combineReducers({
      user: persistReducer(loginPersistConfig, userReducer),
+     expense: expenseReducer,
         [AuthApi.reducerPath]: AuthApi.reducer,
 })
 export const store = configureStore({

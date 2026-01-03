@@ -45,8 +45,17 @@ const userSlice = createSlice({
         setRefreshToken: (state, action: PayloadAction<string>) => {
             state.refreshToken = action.payload;
         },
+        clearUserData: (state) => {
+            state.Email = null;
+            state.password = null;
+            state.confirmpassword = null;
+            state.username = null;
+            state.addTransactionPopup = false;
+            state.accessToken = null;
+            state.refreshToken = null;
+        },
     },
 });
 
-export const { setEmail, setPassword, setConfirmPassword, setUsername, setAddTransactionPopup, setAccessToken, setRefreshToken } = userSlice.actions;
+export const { setEmail, setPassword, setConfirmPassword, setUsername, setAddTransactionPopup, setAccessToken, setRefreshToken, clearUserData } = userSlice.actions;
 export default userSlice.reducer;

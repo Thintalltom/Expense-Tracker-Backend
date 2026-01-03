@@ -8,14 +8,31 @@ import { useState } from 'react'
 import { LuLogOut } from "react-icons/lu";
 import { IoMdAdd } from "react-icons/io";
 import { IoIosSearch } from "react-icons/io";
+import {  useGetCategoryQuery, useGetExpensesQuery } from "@/store/query/Auth-query";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from "@/store/store";
+import { setAddTransactionPopup } from '@/store/slices/userSlice';
+import Popup from '@/components/Popup'
 const Transactions = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+      const {data:categoryData } = useGetCategoryQuery();
+      const {data:expensesData } = useGetExpensesQuery();
+         const categoryOption = [
+           { value: '', label: 'All' },
+           ...(Array.isArray(categoryData) ? categoryData.map((cat: { id: number; name: string }) => ({ value: cat.name, label: cat.name })) : [])
+         ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const allTransactions = [
-    { date: '2024-01-15', description: 'Grocery Store', amount: '-$85.50', source: 'Upwork', category: 'Food' },
-    { date: '2024-01-14', description: 'Salary Deposit', amount: '+$3,200.00', source: 'Upwork', category: 'Income' },
-    { date: '2024-01-13', description: 'Gas Station', amount: '-$45.20', source: 'Upwork', category: 'Transport' }
-  ];
+  
+  // Transform expense data for table display
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const allTransactions = Array.isArray(expensesData) ? expensesData.map((expense: any) => ({
+    id: expense.id,
+    date: expense.date,
+    description: expense.description,
+    amount: `-$${expense.amount}`,
+    category: expense.category.name,
+    // source: 'Expense'
+  })) : [];
 
   const filteredTransactions = allTransactions.filter(transaction => {
     const matchesCategory = selectedCategory 
@@ -23,19 +40,12 @@ const Transactions = () => {
       : true;
     const matchesSearch = searchTerm
       ? transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        transaction.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (searchTerm.toLowerCase()) ||
         transaction.amount.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
     return matchesCategory && matchesSearch;
   });
   
-  const categoryOptions = [
-    { value: '', label: 'All Categories' },
-    { value: 'food', label: 'Food' },
-    { value: 'income', label: 'Income' },
-    { value: 'transport', label: 'Transport' },
-    { value: 'entertainment', label: 'Entertainment' }
-  ];
   const sidebarItems = [
     {
       label: 'Dashboard',
@@ -59,7 +69,11 @@ const Transactions = () => {
     }
   ]
   const pathname = usePathname()
-
+  const dispatch = useDispatch()
+  const showAddTransactionPopup = useSelector((state:RootState) => state.user.addTransactionPopup)
+     const closePopup = () => {
+      dispatch(setAddTransactionPopup(false))
+    }
   return (
     <div className="flex flex-col lg:flex-row h-screen">
       <Sidebar items={sidebarItems} />
@@ -68,7 +82,7 @@ const Transactions = () => {
           <p>Finance Flow</p>
           <div className='flex gap-2.5'>
             <button className='w-10 h-10 rounded bg-blue-500 shadow-md 
-            flex justify-center items-center'><IoMdAdd className='text-white' />
+            flex justify-center items-center' onClick={() => dispatch(setAddTransactionPopup(true))}><IoMdAdd className='text-white' />
             </button>
             <button><LuLogOut /> </button>
           </div>
@@ -91,7 +105,7 @@ const Transactions = () => {
             </div>
             <div className='w-48'>
               <Dropdown 
-                options={categoryOptions}
+                options={categoryOption}
                 placeholder="Filter by category"
                 onSelect={setSelectedCategory}
                 value={selectedCategory}
@@ -108,13 +122,13 @@ const Transactions = () => {
                 { key: 'description', header: 'Description' },
                 { key: 'category', header: 'Category' },
                 { key: 'amount', header: 'Amount' },
-                { key: 'source', header: 'Source' },
+                // { key: 'source', header: 'Source' },
               ]}
               rows={filteredTransactions}
             />
           ) : (
             <div className='text-center py-8 text-gray-500'>
-              <p>No data present for keyword searched: {searchTerm  ? searchTerm : selectedCategory}</p>
+              {filteredTransactions.length === 0 ? (<p>No Data Present Currently</p>) : <p>No data present for keyword searched: {searchTerm  ? searchTerm : selectedCategory}</p>}
             </div>
           )}
         </div>
@@ -138,6 +152,7 @@ const Transactions = () => {
           }
         </div>
       </div>
+      {showAddTransactionPopup && <Popup closePopup={closePopup}/> }
     </div>
   )
 }

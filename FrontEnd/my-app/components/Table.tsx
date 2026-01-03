@@ -18,7 +18,7 @@ const Table = ({ columns, rows }: TableProps) => {
     if (lowerValue === 'income') return 'text-green-600 bg-green-50';
     if (lowerValue === 'work') return 'text-purple-600 bg-purple-50';
     if (lowerValue === 'entertainment') return 'text-pink-600 bg-pink-50';
-    return 'text-gray-900';
+    // return 'text-white bg-purple-600';
   };
 
   return (

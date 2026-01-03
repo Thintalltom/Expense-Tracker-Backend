@@ -16,6 +16,23 @@ interface responseDetails {
     email?: string;
     
 }
+interface categoryDetails {
+    id: number;
+    name: string;
+}
+
+interface ExpenseBody { 
+id?: number,
+  amount?: string,
+  description?: string,
+  date?: string,
+  category?: {
+    id?: number,
+    name?: string
+  },
+  category_name?: string
+
+}
 
 export const AuthApi = createApi({
     reducerPath: "AuthApi",
@@ -48,10 +65,29 @@ export const AuthApi = createApi({
                 url: 'me/',
                 method: 'GET',
             })
-        })
+        }),
+        getCategory: builder.query<categoryDetails, void>({
+            query: () => ({
+                url: 'categories/',
+                method: 'GET',
+            })
+        }),
+        createExpense: builder.mutation<ExpenseBody, ExpenseBody>({
+            query: (body) => ({
+                url: 'expenses/create/',
+                method: 'POST',
+                body
+            })
+        }),
+        getExpenses: builder.query<ExpenseBody[], void>({
+            query: () => ({
+                url: 'expenses/',
+                method: 'GET',  
+            })
+        }),
     })
 });
 
 export const { useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation,
-    useGetUserDetailsQuery
+    useGetUserDetailsQuery, useGetCategoryQuery, useCreateExpenseMutation, useGetExpensesQuery
 } = AuthApi
