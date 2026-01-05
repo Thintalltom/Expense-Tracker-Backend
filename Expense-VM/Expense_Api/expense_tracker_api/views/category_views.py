@@ -27,7 +27,7 @@ def get_Categorys(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_Category(request):
-    serializer = CategorySerializer(data=request.data)
+    serializer = CategorySerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -55,14 +55,14 @@ def category_detail(request, pk):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = CategorySerializer(category, data=request.data)
+        serializer = CategorySerializer(category, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'PATCH':
-        serializer = CategorySerializer(category, data=request.data, partial=True)
+        serializer = CategorySerializer(category, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
