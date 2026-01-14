@@ -30,16 +30,16 @@ const Sidebar = ({ items }: SidebarProps) => {
   const router = useRouter();
   const logoutHandler = async () => {
     try {
-      const response = await logoutUser({
-        refresh: refreshToken || ''
-      }).unwrap();
+      // const response = await logoutUser({
+      //   refresh: refreshToken || ''
+      // }).unwrap();
       
       // Clear Redux persist storage
       dispatch(clearUserData());
       await persistor.purge();
       //always add this to reset api state
       dispatch(AuthApi.util.resetApiState());
-      toast.success(response.message);
+      // toast.success(response.message);
       router.push('/login');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: string | any) {

@@ -3,23 +3,25 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
-from ..serializers import IncomeSerializer
-from ..models import Income
-
-
+from ..serializers import   IncomeCategorySerializer
+from ..models import  IncomeCategory
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_Incomes(request):
-    incomes = Income.objects.filter(user=request.user)
-    serializer = IncomeSerializer(incomes, many=True)
+def get_IncomeCategories(request):
+    income_categories = IncomeCategory.objects.filter(user=request.user)
+    serializer = IncomeCategorySerializer(income_categories, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@swagger_auto_schema(method='post', request_body=IncomeSerializer)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_Income(request):
-    serializer = IncomeSerializer(data=request.data)
+@swagger_auto_schema(
+    request_body=IncomeCategorySerializer,
+    operation_description="Create a new income category",
+    responses={201: IncomeCategorySerializer}
+)
+def create_IncomeCategory(request):
+    serializer = IncomeCategorySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

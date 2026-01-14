@@ -12,6 +12,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const accessToken = useSelector((state: RootState) => state.user.accessToken)
   const router = useRouter()
 
+//  console.log("ProtectedRoute accessToken:", accessToken);
   useEffect(() => {
     if (!accessToken) {
       router.push('/login')

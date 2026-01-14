@@ -38,7 +38,7 @@ const Table = ({ columns, rows }: TableProps) => {
             <tr key={index} className="hover:bg-gray-50">
               {columns.map((column) => (
                 <td key={column.key} className={`px-6 py-4 whitespace-nowrap text-sm ${getValueColor(row[column.key])}`}>
-                  {row[column.key]}
+                  {column.key === 'amount' ? `₦${Number(row[column.key]).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : row[column.key]}
                 </td>
               ))}
             </tr>

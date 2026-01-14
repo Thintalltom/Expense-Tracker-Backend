@@ -85,11 +85,12 @@ const Popup = ({ closePopup }: popupClose) => {
                                 />
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Category</label>
-                                    <Dropdown
-                                        options={categoryOption}
-                                        placeholder="Select category"
-                                        onSelect={setCategory}
-                                        value={category}
+                                    
+                                        <Dropdown
+                                            options={categoryOption}
+                                            placeholder="Select category"
+                                            onSelect={setCategory}
+                                            value={category}
                                     />
                                 </div>
                                 <InputField

@@ -2,8 +2,13 @@
 import React, {useState} from 'react'
 import DashboardLayout from '@/components/DashboardLayout';
 import CategoryPopup from '@/components/CategoryPopup';
+import {  useGetCategoryQuery } from "@/store/query/Auth-query";
+import ExpenseCard from '@/components/ExpenseCard';
+
 const Category = () => {
   const [categoryPopup, setCategoryPopup] = useState<boolean>(false);
+      const {data:categoryData, error:categoryError, isLoading:categoryLoading} = useGetCategoryQuery();    
+
   return (
     <DashboardLayout>
       <div className='flex justify-between'>
@@ -17,6 +22,17 @@ const Category = () => {
       </div>
       {categoryPopup && <CategoryPopup closePopup={() => setCategoryPopup(false)} />}
 
+    <div className='grid grid-cols-1 gap-3 mt-2'>
+      {categoryLoading && <p>Loading categories...</p>}
+      {categoryData && categoryData.map((category: { id: string; name: string; limit: string; color: string }) => (
+        <ExpenseCard 
+          key={category.id}
+          name={category.name}
+          limit={category.limit}
+          color={category.color}
+        />
+      ))}
+    </div>
     </DashboardLayout>
   )
 }

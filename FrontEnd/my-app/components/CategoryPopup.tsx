@@ -2,8 +2,10 @@ import { useState } from "react";
 import { MdCancel } from "react-icons/md";
 import InputField from './InputField';
 import Dropdown from './Dropdown';
-import { useCreateExpenseMutation, useGetCategoryQuery } from "@/store/query/Auth-query";
+import { useCreateExpenseMutation} from "@/store/query/Auth-query";
 import { toast } from "sonner";
+import { useCreateCategoryMutation, useGetCategoryQuery } from "@/store/query/Auth-query";
+
 interface popupClose {
     closePopup: () => void;
 }
@@ -12,15 +14,29 @@ const CategoryPopup = ({ closePopup }: popupClose) => {
     const [categoryName, setCategoryName] = useState<string>('');
     const [selectedColor, setSelectedColor] = useState<string>('#3B82F6');
     const [limit, setLimit] = useState<string>('');
-    
+    const [createCategory] = useCreateCategoryMutation();
+
     const colors = [
         '#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6',
         '#EC4899', '#06B6D4', '#84CC16', '#F97316', '#6366F1'
     ];
+
     const handleCreateCategory = async () => {
         // Implement category creation logic here
-        toast.success('Category created successfully');
         closePopup();
+        try {
+          const response = await createCategory({
+                name: categoryName,
+                color: selectedColor,
+                limit: limit
+            });
+            if(response){
+                toast.success('Category created successfully');
+            }
+        } catch (error) {
+            toast.error('Failed to create category');
+            console.log('Error creating category:', error);
+        }
     }
   return (
      <div className="fixed inset-0 bg-black/50 bg-opacity-20 flex items-end md:items-center justify-center z-50">

@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { IoChevronDown } from 'react-icons/io5'
+import { useRouter } from 'next/navigation'
 
 interface DropdownOption {
   value: string;
@@ -16,6 +17,7 @@ interface DropdownProps {
 
 const Dropdown = ({ options, placeholder = 'Select option', onSelect, value }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const selectedOption = options.find(option => option.value === value);
 
   return (
@@ -32,18 +34,30 @@ const Dropdown = ({ options, placeholder = 'Select option', onSelect, value }: D
       
       {isOpen && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
-          {options.map((option) => (
+          {options.length === 0 ? (
             <button
-              key={option.value}
               onClick={() => {
-                onSelect(option.value);
+                router.push('/dashboard/category');
                 setIsOpen(false);
               }}
-              className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+              className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 text-blue-600"
             >
-              {option.label}
+              + Add Category
             </button>
-          ))}
+          ) : (
+            options.map((option, index: number) => (
+              <button
+                key={index}
+                onClick={() => {
+                  onSelect(option.value);
+                  setIsOpen(false);
+                }}
+                className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+              >
+                {option.label}
+              </button>
+            ))
+          )}
         </div>
       )}
     </div>
